@@ -1,0 +1,73 @@
+<script src="scraper.js"></script>
+
+<script>
+    async function getView(url) {
+        const page = await downloadPage(url);
+        const characterInfo = page.getElementsByClassName('mvc-table mvc-table-striped')[0];
+
+        characterInfo.style.width = "auto";
+        characterInfo.style.verticalAlign = "top";
+        characterInfo.style.display = "inline-block";
+        characterInfo.style.borderLeft = "2px black solid";
+
+        const tbody = characterInfo.children[0];
+        tbody.children[0].remove();
+        Array.from(tbody.children)
+            .filter((child, index) => index > 5)
+            .forEach(child => child.remove());
+        return characterInfo;
+    }
+
+    function showAll() {
+        document.body.style.background = "white";
+
+        Promise.all(urls.map(url => getView(url)))
+            .then(views => {
+                Array.from(previous.children).forEach((view, index) => {
+/*                    const tbody = view.children[0];
+                    previousValues.set('level' + index, tbody.children[2].getElementsByTagName('b').innerText);
+                    previousValues.set('resets' + index, tbody.children[3].getElementsByTagName('b').innerText);*/
+                    view.remove();
+                });
+                previous.replaceChildren(...current.children);
+
+
+                views.forEach((view, index) => {
+                    current.append(view);
+
+/*                    const tbody = view.children[0];
+                    currentValues.set('level' + index, tbody.children[2].getElementsByTagName('b').innerText);
+                    currentValues.set('resets' + index, tbody.children[3].getElementsByTagName('b').innerText);
+
+                    const p = Number(previousValues.get('level' + index));
+                    const c = Number(currentValues.get('level' + index));
+                    console.log('compare', c - p, p, c);*/
+                });
+
+                const timeElement = document.createElement("div");
+                timeElement.append(new Date().toLocaleTimeString());
+                current.append(timeElement);
+            })
+    }
+
+    const urls = [
+        'https://nolimit.lv/index.php?id=rankings&mpsrv=1&viewc=SlayerxZ',
+        'https://nolimit.lv/index.php?id=rankings&mpsrv=1&viewc=SpecialBM',
+        'https://nolimit.lv/index.php?id=rankings&mpsrv=1&viewc=TheDLSUP',
+        'https://nolimit.lv/index.php?id=rankings&mpsrv=1&viewc=JessaMae',
+        'https://nolimit.lv/index.php?id=rankings&mpsrv=1&viewc=DESKA',
+    ];
+
+    const previous = document.createElement("div");
+    const current = document.createElement("div");
+    const previousValues = new Map();
+    const currentValues = new Map();
+
+    window.onload = () => {
+        document.body.innerHTML = "";
+        document.body.append(previous, current);
+
+        showAll();
+        setInterval(showAll, 90000);
+    }
+</script>
