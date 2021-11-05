@@ -1,2 +1,2 @@
 # cheat-tools
-Tools to create external and internal game bots, cheats etc.
+Tools to create external and internal games bots, cheats etc.
