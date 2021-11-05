@@ -12,3 +12,8 @@ Sweet alias:
 then
 
 	chromex *PATH*/index.html
+
+
+Screenshoot:
+
+![Alt text](screenshoot.png?raw=true "MU Online character list")
